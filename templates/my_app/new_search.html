@@ -4,48 +4,22 @@
     <h2 style="text-align: center">{{ search | title}}</h2>
 
     <div class="row">
-
+        {% for post in final_post %}
             <div class="col s4">
-                <div class="card">
+                <div class="card card-panel hoverable">
                     <div class="card-image">
-                        <a href="/"><img src="/" alt=""></a>
+                        <a href="{{ post.1 }}"><img class="responsive-img" src="{{ post.3 }}" alt=""></a>
                     </div>
-                    <div class="card-content">
-                        <p>Test</p>
+                    <div class="card-content truncate">
+                        <p>{{ post.0 }}</p>
                     </div>
                     <div class="card-action">
-                        <a href="/">View listing: Price /</a>
+                        <a href="{{ post.1 }}">View listing: Price {{ post.2 }}</a>
                     </div>
                 </div>
             </div>
 
-            <div class="col s4">
-                <div class="card">
-                    <div class="card-image">
-                        <a href="/"><img src="/" alt=""></a>
-                    </div>
-                    <div class="card-content">
-                        <p>Test</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="/">View listing: Price /</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col s4">
-                <div class="card">
-                    <div class="card-image">
-                        <a href="/"><img src="/" alt=""></a>
-                    </div>
-                    <div class="card-content">
-                        <p>Test</p>
-                    </div>
-                    <div class="card-action">
-                        <a href="/">View listing: Price /</a>
-                    </div>
-                </div>
-            </div>
+    {% endfor %}
     </div>
 {% endblock content %}
 

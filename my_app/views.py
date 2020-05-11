@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from urllib.parse import quote_plus
 from bs4 import BeautifulSoup
+from .models import Search
 import requests
 import re
 import lxml
@@ -18,6 +19,7 @@ def home(request):
 
 def new_search(request):
     search = request.POST.get('search')
+    Search.objects.create(search=search)
     final_url = craigslist_url.format(quote_plus(search))
     response = requests.get(final_url)
     # print(response)
@@ -45,7 +47,6 @@ def new_search(request):
         if post.find(class_='result-image').get('data-ids'):
             image_id = post.find(class_="result-image").get('data-ids').split(',')[0].split(':')[1]
             image = image_url.format(image_id)
-            print(image)
 
         else:
             image = 'https://craigslist.org/images/peace.jpg'
@@ -54,8 +55,18 @@ def new_search(request):
             price = post.find(class_='result-price').text
 
         else:
-            price = 'N/A'
+            new_response = requests.get(url)
+            new_data = new_response.text
+            new_soup = BeautifulSoup(new_data, features='lxml')
+            post_text = new_soup.find(id ="postingbody").text
 
-        final_post.append((title, url, image ))
+            r1 = re.findall(r'\$\w+', post_text)
+
+            if r1:
+                price = r1[0]
+            else:
+                price = 'N/A'
+
+        final_post.append((title, url, price , image))
 
     return render(request, 'my_app/new_search.html', {'search': search, 'final_post':final_post,})
